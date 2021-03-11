@@ -3,11 +3,12 @@ import urllib.request
 import lxml.html
 import lxml.etree
 import re
+import requests
 import sys
 import time
 
 base_url = 'http://schema.org/'
-full_docs_url = 'http://schema.org/docs/full.html'
+full_docs_url = 'https://schema.org/docs/full.html'
 
 class AppURLopener(urllib.request.URLopener):
     version = "SchemaScraper/1.1 (http://schema.rdfs.org/)"
@@ -18,19 +19,23 @@ def get_all_types():
 
     types = {}
     for id, type_url in type_urls.items():
-        types[id] = get_type_details(id, type_url)
-        time.sleep(1)
+        if id[0] == 'A':
+          types[id] = get_type_details(id, type_url)
+          time.sleep(0.01)
 
     return types
 
 
 def get_url_data (url):
     try:
-        root = lxml.html.fromstring(urllib.request.urlopen(url).read())
+        #s = urllib.request.urlopen(url).read()
+        r = requests.get(url)
+        s = r.content
+        root = lxml.html.fromstring(s)
     except Exception as e:
         print(e)
-        print('...There was a problem. Wait for 30 seconds and try again')
-        time.sleep(30)
+        print('...There was a problem. Wait for 3 seconds and try again')
+        time.sleep(3)
         return get_url_data(url);
     return root;
 
@@ -45,7 +50,6 @@ def get_all_type_urls():
     types = {}
     for a in root.cssselect(".dttBranch a"):
         id = a.text_content()
-        print(id)
         if id[-1] == '+': continue
         types[id] = a.get("href")
     return types
@@ -198,7 +202,7 @@ def collect_properties(types):
             pid = property['id']
             for rid in property['ranges']:
                 if rid in types: continue
-                print >> sys.stderr, 'WARNING: Undefined expected type ' + rid + ' for property ' + pid + ' of type ' + tid
+                print('WARNING: Undefined expected type ' + rid + ' for property ' + pid + ' of type ' + tid)
             if pid in properties:
                 properties[pid]['ranges'] = list(set(properties[pid]['ranges'] + property['ranges']))
                 properties[pid]['domains'] = list(set(properties[pid]['domains'] + property['domains']))

@@ -32,8 +32,8 @@ types = schema_scraper.remove_property_details(types)
 print('Writing JSON to ' + json_file)
 schema2json.dump_json(datatypes, types, properties, date, open(json_file, 'w'))
 
-print('Writing classes to ' + csv_class_file)
-schema2csv.dump_types_csv(types, open(csv_class_file, 'w'))
+#print('Writing classes to ' + csv_class_file)
+#schema2csv.dump_types_csv(types, open(csv_class_file, 'w'))
 
 print('Writing properties to ' + csv_property_file)
 schema2csv.dump_properties_csv(properties, open(csv_property_file, 'w'))
