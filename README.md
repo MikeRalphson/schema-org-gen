@@ -5,6 +5,15 @@ The schemas at http://schema.org/ are very helpful for formats like JSON-LD, but
 
 This tool generates schemas describing a canonical plain-JSON serialisation for each of the schema.org types.
 
+## Installation and execution
+
+...
+
+## See also
+
+* https://github.com/schemaorg/schemaorg.git
+* https://github.com/shexSpec/shex.js
+
 ## Multiplicity of relations
 
 The documentation at schema.org gives no indication which properties/relations can have multiple entries.  A `PostalAddress` should (intuitively) only have one `streetAddress`, but many other properties are one-to-many mappings (represented in JSON as arrays instead of direct values).

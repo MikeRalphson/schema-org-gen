@@ -9,7 +9,7 @@
   "repository": "",
   "author": "Geraint Luff",
   "dependencies": {
-    "request": "~2.27.0"
+    "node-fetch": "^2.6.1"
   },
   "private": true
 }
