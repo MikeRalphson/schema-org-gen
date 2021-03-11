@@ -19,9 +19,9 @@ def get_all_types():
 
     types = {}
     for id, type_url in type_urls.items():
-        if id[0] == 'A':
-          types[id] = get_type_details(id, type_url)
-          time.sleep(0.01)
+        #if id[0] == 'A': # TODO MER
+        types[id] = get_type_details(id, type_url)
+        time.sleep(0.01)
 
     return types
 
@@ -48,7 +48,7 @@ def parse(url):
 def get_all_type_urls():
     root = parse(full_docs_url)
     types = {}
-    for a in root.cssselect(".dttBranch a"):
+    for a in root.cssselect(".dttBranch a"): #MER fixed
         id = a.text_content()
         if id[-1] == '+': continue
         types[id] = a.get("href")
@@ -62,8 +62,8 @@ def get_inner_html(el):
         result = ''
 
     for c in el.getchildren():
-        if c.text:
-          result += c.text # #lxml.etree # tostring
+        if c.text: # MER hardening
+          result += c.text #MER #lxml.etree # tostring
     return result
     
 def get_type_details(id, url):
@@ -74,7 +74,7 @@ def get_type_details(id, url):
     type = {}
     type['url'] = url
 
-    ancestor_links = root.cssselect(".breadcrumbs a")
+    ancestor_links = root.cssselect(".superPaths a") # was .breadcrumbs a
 
     type['id'] = id
     type['label'] = get_label(id)
@@ -83,7 +83,7 @@ def get_type_details(id, url):
         ancestor_name = a.text_content().strip()
         if (ancestor_name != id and ancestor_name not in type['ancestors']):
             type['ancestors'].append(ancestor_name)
-            print(a.text_content().strip())
+            print("  "+a.text_content().strip())
 
     els = root.cssselect("div[property='rdfs:comment']")
     if len(els):
@@ -103,7 +103,7 @@ def get_type_details(id, url):
         property_table_index = 0
         instance_table_index = 1
     elif len(tables) == 1:
-        if "may appear as values for the following properties" in root.cssselect("#mainContent")[0].text_content():
+        if "may appear as a value for the following properties" in root.cssselect("#mainContent")[0].text_content():
             property_table_index = -1
             instance_table_index = 0
         else:
@@ -219,8 +219,8 @@ def split_types_datatypes(types):
     t = {}
     dt = {}
     for id in types:
-        if id == 'DataType' or 'DataType' in types[id]['ancestors']:
+        if not (id == 'DataType' or 'DataType' in types[id]['ancestors']):
             dt[id] = types[id]
         else:
-            t[id] = types[id]
+            t[id] = types[id] # swapped logic
     return (t, dt)

@@ -4,13 +4,13 @@ import datetime
 import schema2json
 
 if len(sys.argv) > 2:
-    print "Usage: python scrape_json.py output.json"
+    print("Usage: python scrape_json.py output.json")
     sys.exit()
 
 if len(sys.argv) == 1:
     out = sys.stdout
 else:
-    out = open(sys.argv[1], 'wb')
+    out = open(sys.argv[1], 'w')
 
 types = schema_scraper.get_all_types()
 types = schema_scraper.add_supertype_relationships(types)
@@ -20,5 +20,5 @@ types = schema_scraper.remove_property_details(types)
 
 date = datetime.date.today().isoformat()
 
-print >> sys.stderr, 'Writing JSON'
+print('Writing JSON')
 schema2json.dump_json(datatypes, types, properties, date, out)
