@@ -12,6 +12,7 @@ This tool generates schemas describing a canonical plain-JSON serialisation for 
 ## See also
 
 * https://github.com/schemaorg/schemaorg.git
+* https://github.com/link-fish/schema-org-rdf
 * https://github.com/shexSpec/shex.js
 
 ## Multiplicity of relations
